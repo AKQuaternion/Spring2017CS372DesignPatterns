@@ -72,7 +72,10 @@ Variable::Variable(const std::string &name):_name(name)
 {}
 
 double Variable::evaluate(const Context & c) const  {
-    return c.find(_name)->second; //!!!unsafe
+    if (c.find(_name) != c.end())
+        return c.find(_name)->second;
+    else
+        throw std::runtime_error("Variable::evaluate(const Context & c) called on a variable not in the Context.");
 }
 
 void Variable::print() const {

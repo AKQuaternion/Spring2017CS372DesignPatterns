@@ -29,11 +29,9 @@ class Term : public Expression
 {
 public:
 private:
-    
 };
 
 class Factor : public Term {
-    
 };
 
 class SumExpression : public Expression {
