@@ -7,6 +7,8 @@
 //
 
 #include <memory>
+using std::shared_ptr;
+using std::make_shared;
 using std::unique_ptr;
 using std::make_unique;
 using std::move;
@@ -77,8 +79,34 @@ void testMonster() {
     mike->doMovement();
 }
 
-int main() {
+#include "Subject.hpp"
+#include "Observer.hpp"
 
-    testMonster();
+void testObserver() {
+    Subject s;
+
+    auto bgo =make_shared<BarGraphObserver>();
+    s.attach(bgo);
+    
+    auto co = make_shared<CoutObserver>();
+    s.attach(co);
+    
+    auto ao = make_shared<AlarmObserver>(13);
+    s.attach(ao);
+    
+    auto eoo = make_shared<EvenOddObserver>();
+    s.attach(eoo);
+    
+    s.setValue(13);
+    cout << endl;
+    s.setValue(5);
+    cout << endl;
+    s.detach(bgo);
+    s.setValue(200);
+}
+
+
+int main() {
+    testObserver();
     return 0;
 }
