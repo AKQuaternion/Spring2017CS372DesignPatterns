@@ -105,8 +105,33 @@ void testObserver() {
     s.setValue(200);
 }
 
+#include "Armor.hpp"
+
+void show(const Armor &a)
+{
+    cout << a.description() << " has AC " << a.getAC() << endl;
+}
+
+void testArmor()
+{
+    unique_ptr<Armor> pm = make_unique<PlateArmor>();
+    show(*pm);
+
+    unique_ptr<Armor> l = make_unique<LeatherArmor>();
+    show(*l);
+    
+    unique_ptr<Armor> rpm = make_unique<RustyDecorator>(move(pm));
+    show(*rpm);
+    
+    unique_ptr<Armor> ml = make_unique<MagicDecorator>(move(l),5);
+    show(*ml);
+    
+    unique_ptr<Armor> mrpm = make_unique<MagicDecorator>(move(rpm),-5);
+    show(*mrpm);
+
+}
 
 int main() {
-    testObserver();
+    testArmor();
     return 0;
 }
