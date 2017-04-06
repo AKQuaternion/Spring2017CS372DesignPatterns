@@ -22,7 +22,9 @@ using std::map;
 #include <iostream>
 using std::cout;
 using std::endl;
-
+using std::cin;
+#include <vector>
+using std::vector;
 
 #include "Expression.hpp"
 // E -> E + T | E - T | T
@@ -131,7 +133,40 @@ void testArmor()
 
 }
 
+#include "Command.hpp"
+void testCommand()
+{
+    vector<unique_ptr<Command>> buttons(10);
+    for(auto &b:buttons)
+        b = make_unique<NullCommand>();
+    
+    buttons[0] = make_unique<QuitCommand>();
+    buttons[1] = make_unique<HelloCommand>();
+    buttons[2] = make_unique<GoodbyeCommand>();
+    
+    shared_ptr<HomeObject> light = make_shared<LightObject>();
+    shared_ptr<HomeObject> stereo = make_shared<StereoObject>();
+    
+    buttons[3] = make_unique<HomeObjectOnCommand>(light);
+    buttons[4] = make_unique<HomeObjectOffCommand>(light);
+    buttons[5] = make_unique<HomeObjectOnCommand>(stereo);
+    buttons[6] = make_unique<HomeObjectOffCommand>(stereo);
+    
+    while (1) {
+        cout << "Which button? " << endl;
+        int b;
+        cin >> b;
+        if (b==-1)
+            return;
+        buttons[b]->execute();
+    }
+}
+
 int main() {
-    testArmor();
+    try {
+    testCommand();
+    }
+    catch (...)
+    {}
     return 0;
 }
