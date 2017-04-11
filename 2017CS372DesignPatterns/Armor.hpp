@@ -50,10 +50,11 @@ class ArmorDecorator : public Armor
 public:
     ArmorDecorator(unique_ptr<Armor> component) : _component(move(component))
     {}
+    virtual string description() const = 0;
 protected:
-    string componentDescription() const{
-        return _component->description();
-    }
+//    string componentDescription() const{
+//        return _component->description();
+//    }
     
     int componentAC() const {
         return _component->getAC();
@@ -70,7 +71,7 @@ public:
         return componentAC()-2;
     }
     string description() const override {
-        return "Rusty " + componentDescription();
+        return "Rusty " + ArmorDecorator::description();
     }
 private:
 };
@@ -86,7 +87,7 @@ public:
         return componentAC()+_bonus;
     }
     string description() const override {
-        return string("Magic (") + (_bonus>=0?"+":"") + std::to_string(_bonus) + ") " + componentDescription();
+        return string("Magic (") + (_bonus>=0?"+":"") + std::to_string(_bonus) + ") " + ArmorDecorator::description();
     }
 private:
     int _bonus;

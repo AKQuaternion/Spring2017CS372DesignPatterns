@@ -7,3 +7,7 @@
 //
 
 #include "Armor.hpp"
+
+string ArmorDecorator::description() const {
+    return _component->description();
+}
