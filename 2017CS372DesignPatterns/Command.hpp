@@ -13,12 +13,41 @@ using std::cout;
 using std::endl;
 #include <memory>
 using std::shared_ptr;
+#include <vector>
+using std::vector;
+#include <utility>
+using std::function;
 
 class Command {
 public:
     virtual ~Command()=default;
     virtual void execute() const = 0;
 private:
+};
+
+class MacroCommand : public Command {
+public:
+    MacroCommand(const vector<shared_ptr<Command>> &commands):_commands(commands)
+    {}
+    void execute() const override
+    {
+        for(auto c:_commands)
+            c->execute();
+    }
+private:
+    vector<shared_ptr<Command>> _commands;
+};
+
+class AnyCommand : public Command
+{
+public:
+    AnyCommand(function<void ()> f):_f(f)
+    {}
+    void execute() const override{
+        _f();
+    }
+private:
+    function<void ()> _f;
 };
 
 class NullCommand : public Command

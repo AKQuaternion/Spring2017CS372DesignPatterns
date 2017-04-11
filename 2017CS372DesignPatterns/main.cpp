@@ -130,7 +130,12 @@ void testArmor()
     
     unique_ptr<Armor> mrpm = make_unique<MagicDecorator>(move(rpm),-5);
     show(*mrpm);
+    
+}
 
+void foo()
+{
+    cout << "4" << endl;
 }
 
 #include "Command.hpp"
@@ -151,6 +156,12 @@ void testCommand()
     buttons[4] = make_unique<HomeObjectOffCommand>(light);
     buttons[5] = make_unique<HomeObjectOnCommand>(stereo);
     buttons[6] = make_unique<HomeObjectOffCommand>(stereo);
+    
+    buttons[7] = make_unique<MacroCommand>(vector<shared_ptr<Command>>{make_shared<HomeObjectOnCommand>(light),
+        make_shared<HomeObjectOnCommand>(stereo),
+        make_shared<AnyCommand>([](){cout << "We're done!\n";}),
+        make_shared<AnyCommand>(foo)
+    });
     
     while (1) {
         cout << "Which button? " << endl;
