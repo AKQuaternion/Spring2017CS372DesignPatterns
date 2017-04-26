@@ -16,18 +16,24 @@
 
 class Visitor;
 
-class Component
-{
+class ComponentBase {
 public:
-    virtual ~Component() = default;
+    virtual ~ComponentBase()=default;
     virtual size_t size() const = 0;
     virtual void print(int tab=0) const = 0;
-    virtual void accept(Visitor *v) const = 0;
     virtual std::string getName() const = 0;
+    virtual void accept(Visitor *v)=0;
+};
+
+template <typename T>
+class Component : public ComponentBase
+{
+public:
+    void accept(Visitor *v) override;
 private:
 };
 
-class File : public Component
+class File : public Component<File>
 {
     friend void print(std::shared_ptr<File> f);
 
@@ -35,7 +41,6 @@ public:
     File(const std::string &name, size_t size);
     size_t size() const override;
     void print(int tab=0) const override;
-    void accept(Visitor *v) const override;
     std::string getName() const override {
         return _name;
     }
@@ -49,24 +54,23 @@ private:
     std::string _name;
 };
 
-class Folder : public Component
+class Folder : public Component<Folder>
 {
     friend     void print(std::shared_ptr<Folder> f);
 
 public:
     Folder(std::string name);
     size_t size() const override;
-    void add(std::shared_ptr<Component>);
+    void add(std::shared_ptr<ComponentBase>);
     void print(int tab=0) const override;
-    void accept(Visitor *v) const override;
     std::string getName() const override {
         return _name;
     }
-    const std::vector<std::shared_ptr<Component>> & getChildren() const {
+    const std::vector<std::shared_ptr<ComponentBase>> & getChildren() const {
         return _elements;
     }
 private:
-    std::vector<std::shared_ptr<Component>> _elements;
+    std::vector<std::shared_ptr<ComponentBase>> _elements;
     std::string _name;
 };
 

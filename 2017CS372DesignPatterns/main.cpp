@@ -173,9 +173,57 @@ void testCommand()
     }
 }
 
+#include "Composite.hpp"
+#include "Visitor.hpp"
+
+void testComposite(){
+    auto f1 = make_shared<File>("File1", 1);
+    auto f3 = make_shared<File>("File3", 3);
+    auto f5 = make_shared<File>("File5", 5);
+    auto f7 = make_shared<File>("File7", 7);
+    auto f9 = make_shared<File>("File9", 9);
+    auto folder1 = make_shared<Folder>("Folder1");
+    folder1->add(f1);
+    folder1->add(f3);
+    folder1->add(f5);
+    folder1->add(f7);
+    folder1->add(f9);
+    
+//    cout << f5->size() << endl;
+//    cout << folder1->size() << endl;
+    
+    auto folder2 = make_shared<Folder>("Folder2");
+    folder2->add(folder1);
+    folder2->add(make_shared<File>("Big file", 1e6));
+//    cout << folder2->size() << endl;
+    
+//    folder2->print();
+    
+    PrintVisitor v;
+    folder2->accept(&v);
+    
+    SizeVisitor v2;
+    folder2->accept(&v2);
+    cout << v2.getSize() << endl;
+}
+
+#include "MP3Player.hpp"
+void testState() {
+    MP3Player m;
+    m.pushSourceButton();
+    m.pushNextButton();
+    m.pushNextButton();
+    m.pushSourceButton();
+    m.pushNextButton();
+    m.pushNextButton();
+    m.pushSourceButton();
+    m.pushNextButton();
+    m.pushNextButton();
+}
+
 int main() {
     try {
-    testCommand();
+    testComposite();
     }
     catch (...)
     {}

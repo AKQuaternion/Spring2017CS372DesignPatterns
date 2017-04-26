@@ -17,6 +17,12 @@ using std::setw;
 #include <memory>
 using std::shared_ptr;
 
+template <typename T>
+void Component<T>::accept(Visitor *v)
+{
+    v->visit(static_cast<T*>(this));
+}
+
 File::File(const string &name, size_t size) :_name(name), _size(size)
 {}
 
@@ -26,10 +32,6 @@ size_t File::size() const {
 
 void File::print(int tab) const {
     std::cout << setw(tab) << " " << _name << endl;
-}
-
-void File::accept(Visitor *v) const {
-    v->visit(this);
 }
 
 size_t Folder::size() const {
@@ -42,7 +44,7 @@ size_t Folder::size() const {
 Folder::Folder(std::string name):_name(name)
 {}
 
-void Folder::add(std::shared_ptr<Component> f) {
+void Folder::add(std::shared_ptr<ComponentBase> f) {
     _elements.push_back(f);
 }
 
@@ -50,8 +52,4 @@ void Folder::print(int tab) const {
     cout << setw(tab) << " " << _name << endl;
     for(auto i:_elements)
         i->print(tab+4);
-}
-
-void Folder::accept(Visitor *v) const {
-    v->visit(this);
 }
